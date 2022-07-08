@@ -1,5 +1,6 @@
 import { movieData } from '../data-mapper/interfaces/interfaces';
 import { renderFilmsCategory } from '../../index';
+import { dontFavoriteFilmLikeButtonFillColor } from '../../constants/constants';
 
 function createMovieElement(
     movie: movieData,
@@ -25,7 +26,7 @@ function createMovieElement(
                                             renderFilmsCategory.favorite ||
                                         isMovieFavorite
                                             ? 'red'
-                                            : '#ff000078'
+                                            : dontFavoriteFilmLikeButtonFillColor
                                     }"
                                     width="50"
                                     height="50"
@@ -58,7 +59,7 @@ function createMovieElement(
                         </div>
     `;
 }
-const getPlaceHolder = (movieType: renderFilmsCategory):string => {
+const getPlaceHolder = (movieType: renderFilmsCategory): string => {
     return `
      <div class=${
          movieType === renderFilmsCategory.favorite

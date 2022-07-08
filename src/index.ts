@@ -8,10 +8,15 @@ import {
     handleTopFilm,
     handleUpcomingFilm,
 } from './eventHandler/eventHandler';
-import {movieData} from './helpers/data-mapper/interfaces/interfaces';
-import {addClickEvent, createMovieElement, getPlaceHolder,} from './helpers/DOM/DOM';
-import {getFavoriteFilmArray} from './helpers/favoriteFilms/favoriteFilm';
-import {api} from './api/api';
+import { movieData } from './helpers/data-mapper/interfaces/interfaces';
+import {
+    addClickEvent,
+    createMovieElement,
+    getPlaceHolder,
+} from './helpers/DOM/DOM';
+import { getFavoriteFilmArray } from './helpers/favoriteFilms/favoriteFilm';
+import { api } from './api/api';
+import { dontFavoriteFilmLikeButtonFillColor } from './constants/constants';
 
 enum loadMoreFilmCategory {
     popular,
@@ -84,7 +89,8 @@ const deleteFavoriteMovie = (movieToDeleteFromFavoriteId: string) => {
     );
     /* remove favorite film from favorite films container */
 
-    const favoriteMovieContainer:HTMLElement | null = document.getElementById('favorite-movies');
+    const favoriteMovieContainer: HTMLElement | null =
+        document.getElementById('favorite-movies');
     for (
         let movieIndex = 0;
         movieIndex < favoriteFilmsArray.length;
@@ -107,18 +113,20 @@ const deleteFavoriteMovie = (movieToDeleteFromFavoriteId: string) => {
             return;
         }
         if (currentFilmId === movieToDeleteFromFavoriteId) {
-            currentLikeButton.style.fill = '#ff000078';
+            currentLikeButton.style.fill = dontFavoriteFilmLikeButtonFillColor;
         }
     });
     /* if no favorite add placeholder*/
-    if (favoriteMovieContainer?.children.length === 0){
-        favoriteMovieContainer.innerHTML = getPlaceHolder(renderFilmsCategory.favorite);
+    if (favoriteMovieContainer?.children.length === 0) {
+        favoriteMovieContainer.innerHTML = getPlaceHolder(
+            renderFilmsCategory.favorite
+        );
     }
 };
-const removePlaceHolder = (container:HTMLElement) => {
+const removePlaceHolder = (container: HTMLElement) => {
     const placeholder: HTMLElement | null = container.querySelector('.nothing');
     placeholder?.remove();
-}
+};
 const addEventListenerForLikeButton = () => {
     const heartButtonArrayFilmContainer: HTMLElement[] = Array.from(
         document.querySelectorAll('#film-container svg')

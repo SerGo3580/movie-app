@@ -32,7 +32,7 @@ interface movieData {
     readonly release_date: string;
     readonly isFavorite: boolean;
     page?: number;
-    total_pages?:number;
+    total_pages?: number;
 }
 const requiredFilmProperty: (keyof responseMovieInterface)[] = [
     'poster_path' as keyof responseMovieInterface,

@@ -13,7 +13,10 @@ import {
     renderFilmsCategory,
     renderRandomMovie,
 } from '../index';
-import { API_KEY } from '../constants/constants';
+import {
+    API_KEY,
+    dontFavoriteFilmLikeButtonFillColor,
+} from '../constants/constants';
 
 //const callApiAndRender = async (renderFilmCategory: renderFilmsCategory) => {};
 interface createUrlParams {
@@ -74,10 +77,10 @@ const crateUrl = (
             throw 'error cant load more';
     }
 };
-const handleSearchFormSubmit = async (event: Event):Promise <void> => {
+const handleSearchFormSubmit = async (event: Event): Promise<void> => {
     event?.preventDefault();
     await handleSearch();
-}
+};
 const handleFavoriteFilm = async (event: Event): Promise<void> => {
     const eventTarget = event.target as HTMLElement;
     const likeButton = eventTarget?.dataset.film_id
@@ -97,7 +100,7 @@ const handleFavoriteFilm = async (event: Event): Promise<void> => {
             [],
             deletedFavoriteFilm
         );
-        likeButton.style.fill = '#ff000078';
+        likeButton.style.fill = dontFavoriteFilmLikeButtonFillColor;
     } else {
         addFavoriteFilm(filmId);
         const url: string = crateUrl(renderFilmsCategory.favorite, { filmId });
