@@ -8,6 +8,7 @@ module.exports = {
     },
     output: {
         path: path.resolve(__dirname, 'dist'),
+        chunkFilename: 'bundle.js',
         filename: 'bundle.js',
         publicPath: '/dist/',
     },
@@ -38,10 +39,5 @@ module.exports = {
             },
         ],
     },
-    mode: 'development',
-    devServer: {
-        static: path.join(__dirname, ''),
-        port: 9090
-    },
-    devtool: 'source-map',
+    mode: "production"
 };
