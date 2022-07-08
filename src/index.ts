@@ -1,15 +1,17 @@
 import {
     handleFavoriteFilm,
+    handleInputChange,
+    handleLoadMore,
     handlePopularFilm,
     handleSearch,
+    handleSearchFormSubmit,
     handleTopFilm,
     handleUpcomingFilm,
-    handleLoadMore,
 } from './eventHandler/eventHandler';
-import { movieData } from './helpers/data-mapper/interfaces/interfaces';
-import { createMovieElement, addClickEvent } from './helpers/DOM/DOM';
-import { getFavoriteFilmArray } from './helpers/favoriteFilms/favoriteFilm';
-import { api } from './api/api';
+import {movieData} from './helpers/data-mapper/interfaces/interfaces';
+import {addClickEvent, createMovieElement, getPlaceHolder,} from './helpers/DOM/DOM';
+import {getFavoriteFilmArray} from './helpers/favoriteFilms/favoriteFilm';
+import {api} from './api/api';
 
 enum loadMoreFilmCategory {
     popular,
@@ -27,25 +29,41 @@ enum renderFilmsCategory {
     favorite_remove,
     load_more,
 }
+enum filmSection {
+    popular,
+    upcoming,
+    top_rated,
+}
+
 const addEventListener = (): void => {
     addClickEvent('#submit', handleSearch);
     addClickEvent('#button-wrapper label[for="popular"]', handlePopularFilm);
     addClickEvent('#button-wrapper label[for="upcoming"]', handleUpcomingFilm);
     addClickEvent('#button-wrapper label[for="top_rated"]', handleTopFilm);
     addClickEvent('#load-more', handleLoadMore);
+
+    const input: HTMLElement | null = document.getElementById('search');
+    input?.addEventListener('input', handleInputChange);
+
+    const form: HTMLElement | null = document.querySelector('form');
+    form?.addEventListener('submit', handleSearchFormSubmit);
 };
 interface appStateInterface {
     page: number;
     total_pages: number;
     current_film_category: loadMoreFilmCategory;
     is_first_run: boolean;
+    is_need_load_more_button: boolean;
+    currentFilmSection: filmSection;
 }
 
 const appState: appStateInterface = {
-    page: 2,
+    page: 1,
     total_pages: 0,
     current_film_category: loadMoreFilmCategory.popular,
     is_first_run: true,
+    is_need_load_more_button: true,
+    currentFilmSection: filmSection.popular,
 };
 
 const start = async (): Promise<void> => {
@@ -66,7 +84,7 @@ const deleteFavoriteMovie = (movieToDeleteFromFavoriteId: string) => {
     );
     /* remove favorite film from favorite films container */
 
-    const favoriteMovieContainer = document.getElementById('favorite-movies');
+    const favoriteMovieContainer:HTMLElement | null = document.getElementById('favorite-movies');
     for (
         let movieIndex = 0;
         movieIndex < favoriteFilmsArray.length;
@@ -92,7 +110,15 @@ const deleteFavoriteMovie = (movieToDeleteFromFavoriteId: string) => {
             currentLikeButton.style.fill = '#ff000078';
         }
     });
+    /* if no favorite add placeholder*/
+    if (favoriteMovieContainer?.children.length === 0){
+        favoriteMovieContainer.innerHTML = getPlaceHolder(renderFilmsCategory.favorite);
+    }
 };
+const removePlaceHolder = (container:HTMLElement) => {
+    const placeholder: HTMLElement | null = container.querySelector('.nothing');
+    placeholder?.remove();
+}
 const addEventListenerForLikeButton = () => {
     const heartButtonArrayFilmContainer: HTMLElement[] = Array.from(
         document.querySelectorAll('#film-container svg')
@@ -180,20 +206,24 @@ const render = async (
             : (document.querySelector(
                   '.container > #film-container'
               ) as HTMLElement);
-    if (typeof filmContainer !== null) {
-        if (
+    if (filmContainer !== null) {
+        if (movieList.length === 0 || movieToRender.length === 0) {
+            filmContainer.innerHTML = getPlaceHolder(renderFilmCategory);
+        } else if (
             renderFilmCategory === renderFilmsCategory.favorite ||
             renderFilmCategory === renderFilmsCategory.load_more
         ) {
-            const prevContent: string = filmContainer.innerHTML;
+            removePlaceHolder(filmContainer);
+            const prevContent: string = filmContainer?.innerHTML;
             filmContainer.innerHTML = `${prevContent} \n ${movieList.join(
                 '\n'
             )}`;
         } else {
+            removePlaceHolder(filmContainer);
             filmContainer.innerHTML = movieList.join('\n');
         }
-        addEventListenerForLikeButton();
     }
+    addEventListenerForLikeButton();
 };
 
 export {
@@ -203,5 +233,6 @@ export {
     renderFilmsCategory,
     loadMoreFilmCategory,
     renderRandomMovie,
+    filmSection,
     appState,
 };

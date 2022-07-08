@@ -7,6 +7,7 @@ import { api } from '../api/api';
 import { movieData } from '../helpers/data-mapper/interfaces/interfaces';
 import {
     appState,
+    filmSection,
     loadMoreFilmCategory,
     render,
     renderFilmsCategory,
@@ -73,7 +74,10 @@ const crateUrl = (
             throw 'error cant load more';
     }
 };
-
+const handleSearchFormSubmit = async (event: Event):Promise <void> => {
+    event?.preventDefault();
+    await handleSearch();
+}
 const handleFavoriteFilm = async (event: Event): Promise<void> => {
     const eventTarget = event.target as HTMLElement;
     const likeButton = eventTarget?.dataset.film_id
@@ -101,7 +105,7 @@ const handleFavoriteFilm = async (event: Event): Promise<void> => {
         await render(renderFilmsCategory.favorite, response);
         likeButton.style.fill = 'red';
     }
-}
+};
 
 const handleSearch = async (): Promise<void> => {
     const search: HTMLInputElement = <HTMLInputElement>(
@@ -115,25 +119,46 @@ const handleSearch = async (): Promise<void> => {
     await render(renderFilmsCategory.search, response);
 };
 
+const handleInputChange = async (): Promise<void> => {
+    const search: HTMLInputElement = <HTMLInputElement>(
+        document.getElementById('search')
+    );
+    if (search?.value.trim() === '') {
+        switch (appState.currentFilmSection) {
+            case filmSection.top_rated:
+                await handleTopFilm();
+                break;
+            case filmSection.upcoming:
+                await handleUpcomingFilm();
+                break;
+            case filmSection.popular:
+                await handlePopularFilm();
+                break;
+        }
+    }
+};
+
 const handleTopFilm = async (): Promise<void> => {
     const url: string = crateUrl(renderFilmsCategory.top_rated, {});
     const response: movieData[] = await api(url);
+    appState.currentFilmSection = filmSection.top_rated;
     await render(renderFilmsCategory.top_rated, response);
 };
 
 const handleUpcomingFilm = async (): Promise<void> => {
     const url: string = crateUrl(renderFilmsCategory.upcoming, {});
     const response: movieData[] = await api(url);
+    appState.currentFilmSection = filmSection.upcoming;
     await render(renderFilmsCategory.upcoming, response);
 };
 
 const handlePopularFilm = async (): Promise<void> => {
     const url: string = crateUrl(renderFilmsCategory.popular, {});
     const response: movieData[] = await api(url);
-
+    appState.currentFilmSection = filmSection.popular;
     if (appState.is_first_run) {
         const randomMovieIndex: number = getRandomInt(0, response.length);
-        const randomMovie:movieData = response[randomMovieIndex];
+        const randomMovie: movieData = response[randomMovieIndex];
         renderRandomMovie(randomMovie);
         appState.is_first_run = false;
     }
@@ -149,8 +174,8 @@ const handleLoadMore = async (): Promise<void> => {
             const search: HTMLInputElement = <HTMLInputElement>(
                 document.getElementById('search')
             );
-            const searchValue:string = search.value;
-            const url:string = crateUrl(renderFilmsCategory.search, {
+            const searchValue: string = search.value;
+            const url: string = crateUrl(renderFilmsCategory.search, {
                 page,
                 value: searchValue,
                 loadMoreFilmCategory: current_film_category,
@@ -176,5 +201,7 @@ export {
     handleUpcomingFilm,
     handleTopFilm,
     handlePopularFilm,
+    handleInputChange,
     handleLoadMore,
+    handleSearchFormSubmit,
 };

@@ -1,4 +1,4 @@
-import { movieData} from "../data-mapper/interfaces/interfaces";
+import { movieData } from '../data-mapper/interfaces/interfaces';
 import { renderFilmsCategory } from '../../index';
 
 function createMovieElement(
@@ -58,7 +58,17 @@ function createMovieElement(
                         </div>
     `;
 }
-
+const getPlaceHolder = (movieType: renderFilmsCategory):string => {
+    return `
+     <div class=${
+         movieType === renderFilmsCategory.favorite
+             ? 'col-12 p-2 nothing'
+             : 'col-lg-12 col-md-12 col-12 p-12 nothing'
+     }>  
+     <img src='https://i.ibb.co/8zBWP92/CULES-3.png' alt=CULES-3 width = 100%>
+     </div>
+    `;
+};
 const addClickEvent = (
     selector: string | [string],
     callback: (event: HTMLElement | MouseEvent) => void
@@ -73,6 +83,6 @@ const addClickEvent = (
     }
     const element: HTMLElement | null = document.querySelector(selector);
     element?.addEventListener('click', callback);
-}
+};
 
-export { createMovieElement, addClickEvent };
+export { createMovieElement, addClickEvent, getPlaceHolder };
