@@ -7,6 +7,8 @@ import {
     handleSearchFormSubmit,
     handleTopFilm,
     handleUpcomingFilm,
+    disableLoadMoreButton,
+    enableLoadMoreButton,
 } from './eventHandler/eventHandler';
 import { movieData } from './helpers/data-mapper/interfaces/interfaces';
 import {
@@ -58,7 +60,6 @@ interface appStateInterface {
     total_pages: number;
     current_film_category: loadMoreFilmCategory;
     is_first_run: boolean;
-    is_need_load_more_button: boolean;
     currentFilmSection: filmSection;
 }
 
@@ -67,7 +68,6 @@ const appState: appStateInterface = {
     total_pages: 0,
     current_film_category: loadMoreFilmCategory.popular,
     is_first_run: true,
-    is_need_load_more_button: true,
     currentFilmSection: filmSection.popular,
 };
 
@@ -217,6 +217,7 @@ const render = async (
     if (filmContainer !== null) {
         if (movieList.length === 0 || movieToRender.length === 0) {
             filmContainer.innerHTML = getPlaceHolder(renderFilmCategory);
+            disableLoadMoreButton();
         } else if (
             renderFilmCategory === renderFilmsCategory.favorite ||
             renderFilmCategory === renderFilmsCategory.load_more
@@ -228,6 +229,7 @@ const render = async (
             )}`;
         } else {
             removePlaceHolder(filmContainer);
+            enableLoadMoreButton();
             filmContainer.innerHTML = movieList.join('\n');
         }
     }

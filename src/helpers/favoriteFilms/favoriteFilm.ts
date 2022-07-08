@@ -32,7 +32,7 @@ export const isFilmInFavorite = (filmId: string): boolean => {
 };
 export const deleteFavoriteFilm = (filmId: string): string | null => {
     const favoriteFilmArray: string[] = getFavoriteFilmArray();
-    const deleteFilmIdIndex:number = favoriteFilmArray.indexOf(filmId);
+    const deleteFilmIdIndex: number = favoriteFilmArray.indexOf(filmId);
     if (favoriteFilmArray.length === 0 || deleteFilmIdIndex === -1) {
         return null;
     }

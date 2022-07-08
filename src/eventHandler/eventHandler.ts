@@ -114,6 +114,7 @@ const handleSearch = async (): Promise<void> => {
     const search: HTMLInputElement = <HTMLInputElement>(
         document.getElementById('search')
     );
+    enableLoadMoreButton();
     const url: string = crateUrl(renderFilmsCategory.search, {
         value: search.value,
         page: 1,
@@ -127,6 +128,7 @@ const handleInputChange = async (): Promise<void> => {
         document.getElementById('search')
     );
     if (search?.value.trim() === '') {
+        enableLoadMoreButton();
         switch (appState.currentFilmSection) {
             case filmSection.top_rated:
                 await handleTopFilm();
@@ -140,11 +142,25 @@ const handleInputChange = async (): Promise<void> => {
         }
     }
 };
-
+const enableLoadMoreButton = () => {
+    const loadMoreButton: HTMLElement | null =
+        document.getElementById('load-more');
+    if (loadMoreButton) {
+        loadMoreButton.style.display = 'block';
+    }
+};
+const disableLoadMoreButton = () => {
+    const loadMoreButton: HTMLElement | null =
+        document.getElementById('load-more');
+    if (loadMoreButton) {
+        loadMoreButton.style.display = 'none';
+    }
+};
 const handleTopFilm = async (): Promise<void> => {
     const url: string = crateUrl(renderFilmsCategory.top_rated, {});
     const response: movieData[] = await api(url);
     appState.currentFilmSection = filmSection.top_rated;
+    enableLoadMoreButton();
     await render(renderFilmsCategory.top_rated, response);
 };
 
@@ -152,6 +168,7 @@ const handleUpcomingFilm = async (): Promise<void> => {
     const url: string = crateUrl(renderFilmsCategory.upcoming, {});
     const response: movieData[] = await api(url);
     appState.currentFilmSection = filmSection.upcoming;
+    enableLoadMoreButton();
     await render(renderFilmsCategory.upcoming, response);
 };
 
@@ -159,6 +176,7 @@ const handlePopularFilm = async (): Promise<void> => {
     const url: string = crateUrl(renderFilmsCategory.popular, {});
     const response: movieData[] = await api(url);
     appState.currentFilmSection = filmSection.popular;
+    enableLoadMoreButton();
     if (appState.is_first_run) {
         const randomMovieIndex: number = getRandomInt(0, response.length);
         const randomMovie: movieData = response[randomMovieIndex];
@@ -193,8 +211,9 @@ const handleLoadMore = async (): Promise<void> => {
             loadMoreFilmCategory: current_film_category,
         });
         const response: movieData[] = await api(url);
-
         await render(renderFilmsCategory.load_more, response);
+    } else {
+        disableLoadMoreButton();
     }
 };
 
@@ -207,4 +226,6 @@ export {
     handleInputChange,
     handleLoadMore,
     handleSearchFormSubmit,
+    disableLoadMoreButton,
+    enableLoadMoreButton,
 };
