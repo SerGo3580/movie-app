@@ -127,6 +127,7 @@ const removePlaceHolder = (container: HTMLElement) => {
     const placeholder: HTMLElement | null = container.querySelector('.nothing');
     placeholder?.remove();
 };
+
 const addEventListenerForLikeButton = () => {
     const heartButtonArrayFilmContainer: HTMLElement[] = Array.from(
         document.querySelectorAll('#film-container svg')

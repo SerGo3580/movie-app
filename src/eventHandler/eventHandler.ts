@@ -142,14 +142,14 @@ const handleInputChange = async (): Promise<void> => {
         }
     }
 };
-const enableLoadMoreButton = () => {
+const enableLoadMoreButton = (): void => {
     const loadMoreButton: HTMLElement | null =
         document.getElementById('load-more');
     if (loadMoreButton) {
         loadMoreButton.style.display = 'block';
     }
 };
-const disableLoadMoreButton = () => {
+const disableLoadMoreButton = (): void => {
     const loadMoreButton: HTMLElement | null =
         document.getElementById('load-more');
     if (loadMoreButton) {

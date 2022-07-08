@@ -61,11 +61,11 @@ function createMovieElement(
 }
 const getPlaceHolder = (movieType: renderFilmsCategory): string => {
     return `
-     <div class=${
+     <div class="${
          movieType === renderFilmsCategory.favorite
              ? 'col-12 p-2 nothing'
              : 'col-lg-12 col-md-12 col-12 p-12 nothing'
-     }>  
+     }">  
      <img src='https://i.ibb.co/8zBWP92/CULES-3.png' alt=CULES-3 width = 100%>
      </div>
     `;
